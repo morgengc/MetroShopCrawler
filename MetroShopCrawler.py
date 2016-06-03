@@ -43,7 +43,7 @@ def GetNormalPage(url):
     request = urllib2.Request(url)
 
     try:
-        response = urllib2.urlopen(request, timeout=5)
+        response = urllib2.urlopen(request, timeout=15)
         content = response.read()
         if len(content) > 0:
             return content
@@ -53,6 +53,7 @@ def GetNormalPage(url):
     except urllib2.URLError, e:
         print "We failed to reach a server."
         print "Reason: ", e.reason
+        GetNormalPage(url)
     except:
         print "Unknown Exception."
         
@@ -71,20 +72,16 @@ def GetAjaxPage(url, body=None, referer=None):
     '''
 
     AutoCookie()
-    if body:
-        postBody = json.dumps(body)
-    else:
-        postBody = None
 
     request = urllib2.Request(url)
-
     request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:45.0) Gecko/20100101 Firefox/45.0')
     request.add_header('X-Requested-With', 'XMLHttpRequest')
     if referer:
         request.add_header('Referer', referer)
     
     try:
-        response = urllib2.urlopen(request, postBody, timeout=5)
+        postBody = (None if body is None else json.dumps(body))
+        response = urllib2.urlopen(request, postBody, timeout=15)
         content = response.read()
         if len(content) > 0:
             return content
@@ -109,6 +106,7 @@ def ParseIndexPage(url):
         None
     '''
 
+    print url
     indexPage = GetNormalPage(url)
 
     # Find all shops(every page got 4 shops)
@@ -141,10 +139,6 @@ def ParseInfoPage(url):
     Returns:
         None
     '''
-
-    if len(url) <= 0:
-        print "Can not Constract URL"
-        return None
 
     # Send Ajax Request to This Page
     referer = 'http://www.cqpayeasy.com/search.php?module=2'
