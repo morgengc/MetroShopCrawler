@@ -13,91 +13,14 @@ import json
 import urllib2 
 import cookielib 
 from lxml import html
+from GetPageLib import GetNormalPage,GetAjaxPage
 
-def AutoCookie():
-    '''Setup a Cookie Handler. It will help us handle cookie automatically.
-
-    Args:
-        None
-
-    Returns:
-        None
-    '''
-
-    cj = cookielib.LWPCookieJar() 
-    cookie_support = urllib2.HTTPCookieProcessor(cj) 
-    opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler) 
-    urllib2.install_opener(opener) 
-
-def GetNormalPage(url):
-    '''Get HTML Based Web Page, Without Ajax.
-
-    Args:
-        url: Full path URL
-
-    Returns:
-        Web Content
-    '''
-
-    AutoCookie()
-    request = urllib2.Request(url)
-
-    try:
-        response = urllib2.urlopen(request, timeout=15)
-        content = response.read()
-        if len(content) > 0:
-            return content
-    except urllib2.HTTPError, e:
-        print "The server couldn't fulfill the request."
-        print "Error code: ", e.code
-    except urllib2.URLError, e:
-        print "We failed to reach a server."
-        print "Reason: ", e.reason
-        GetNormalPage(url)
-    except:
-        print "Unknown Exception."
-        
-    return None
-
-def GetAjaxPage(url, body=None, referer=None):
-    '''Get Web Page Using Ajax.
-
-    Args:
-        url:     Full path URL
-        body:    POST data(if necessary)
-        referer: More referer(if necessary)
-
-    Returns:
-        Web Content
-    '''
-
-    AutoCookie()
-
-    request = urllib2.Request(url)
-    request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:45.0) Gecko/20100101 Firefox/45.0')
-    request.add_header('X-Requested-With', 'XMLHttpRequest')
-    if referer:
-        request.add_header('Referer', referer)
-    
-    try:
-        postBody = (None if body is None else json.dumps(body))
-        response = urllib2.urlopen(request, postBody, timeout=15)
-        content = response.read()
-        if len(content) > 0:
-            return content
-    except urllib2.HTTPError, e:
-        print "The server couldn't fulfill the request."
-        print "Error code: ", e.code
-    except urllib2.URLError, e:
-        print "We failed to reach a server."
-        print "Reason: ", e.reason
-    except:
-        print "Unknown Exception."
-    
-    return None
+##################################################
+#                   Functions                    #
+##################################################
 
 def ParseIndexPage(url):
-    '''Crawl Index Page, Then Parse Shop Urls.
+    '''Crawl Index Page(Normal), Then Parse Shop Urls.
 
     Args:
         url: Index Page URL
@@ -106,7 +29,7 @@ def ParseIndexPage(url):
         None
     '''
 
-    print url
+    print "Index Page: %s" %url
     indexPage = GetNormalPage(url)
 
     # Find all shops(every page got 4 shops)
@@ -115,7 +38,7 @@ def ParseIndexPage(url):
     for shop in shops:
         links = shop.xpath(".//div/a/@href")
         for link in links:
-            print link 
+            print "Ajax Page: %s" %link 
             ParseInfoPage('http://www.cqpayeasy.com' + link)
             print "------"
 
@@ -131,7 +54,7 @@ def ParseIndexPage(url):
         return None
 
 def ParseInfoPage(url):
-    '''Crawl Info Page, Then Parse What You Intrested.
+    '''Crawl Info Page(Ajax), Then Parse What You Intrested.
 
     Args:
         url: Info Page URL
@@ -141,8 +64,8 @@ def ParseInfoPage(url):
     '''
 
     # Send Ajax Request to This Page
-    referer = 'http://www.cqpayeasy.com/search.php?module=2'
-    content = GetAjaxPage(url, None, referer)
+    headers = { 'Referer' : 'http://www.cqpayeasy.com/search.php?module=2' }
+    content = GetAjaxPage(url, None, headers)
     
     # Parse Data
     infopage = html.fromstring(content)
