@@ -1,3 +1,3 @@
 # MetroShopCrawler
 
-A crawler demonstrate how to send Ajax request and how to parse webpage using XPath.
+A crawler demonstrates how to parse webpage using XPath and send Ajax request.
