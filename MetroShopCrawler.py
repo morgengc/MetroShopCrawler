@@ -166,6 +166,9 @@ def ParseInfoPage(url):
         for function in functions:
             print "Function: " + function
 
+        # This field is filled by `search.js` according to debug. 
+        # urllib2 can not render JavaScript, so this field will be always `None`.
+        # you can try `PyQt4.QtWebKit` to render it.
         types = info.xpath(".//td[@id='typedesc']/text()")
         for type in types:
             print "Type: " + type
