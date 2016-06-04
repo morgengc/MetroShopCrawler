@@ -32,7 +32,7 @@ def AutoCookie():
     urllib2.install_opener(opener) 
 
 def RequireNormalPage(url, body=None, headers=None):
-    '''Require basic HTML web page(without Ajax), and return the page content.
+    '''Require web page using HTTP, and return the page content.
 
     Args:
         url:     Full path URL
@@ -69,7 +69,7 @@ def RequireNormalPage(url, body=None, headers=None):
     return None
 
 def RequireAjaxPage(url, body=None, headers=None):
-    '''Require Ajax web page, and return the page content.
+    '''Require web page using Ajax, and return the page content.
 
     Args:
         url:     Full path URL
@@ -80,9 +80,8 @@ def RequireAjaxPage(url, body=None, headers=None):
         Page Content
     '''
 
-    ajaxHeaders = headers
-    ajaxHeaders['X-Requested-With'] = 'XMLHttpRequest'
-
+    ajaxHeaders = {'X-Requested-With' : 'XMLHttpRequest'}
+    ajaxHeaders = (ajaxHeaders if headers is None else ajaxHeaders.update(headers))
     return RequireNormalPage(url, body, ajaxHeaders)
 
 ##################################################
@@ -99,4 +98,8 @@ if __name__ == "__main__":
     } 
 
     print RequireNormalPage(url, values)
+
+    print "------"
+
+    print RequireAjaxPage(url, values)
 

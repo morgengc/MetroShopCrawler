@@ -63,11 +63,12 @@ def ParseInfoPage(url):
         None
     '''
 
-    # Send Ajax Request to This Page
+    # Send Ajax request to this page
+    # However, you can still using `RequireNormalPage()` instead
     headers = { 'Referer' : 'http://www.cqpayeasy.com/search.php?module=2' }
     content = RequireAjaxPage(url, None, headers)
     
-    # Parse Data
+    # Parse data
     infopage = html.fromstring(content)
     groups = infopage.xpath("//div[@class='sub_content_title']/p/text()")
     for group in groups:
