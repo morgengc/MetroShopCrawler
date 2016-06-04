@@ -13,24 +13,24 @@ import json
 import urllib2 
 import cookielib 
 from lxml import html
-from GetPageLib import GetNormalPage,GetAjaxPage
+from GetPageLib import RequireNormalPage, RequireAjaxPage
 
 ##################################################
 #                   Functions                    #
 ##################################################
 
 def ParseIndexPage(url):
-    '''Crawl Index Page(Normal), Then Parse Shop Urls.
+    '''Crawl index page(normal page), then parse shop URLs.
 
     Args:
-        url: Index Page URL
+        url: Index page URL
 
     Returns:
         None
     '''
 
     print "Index Page: %s" %url
-    indexPage = GetNormalPage(url)
+    indexPage = RequireNormalPage(url)
 
     # Find all shops(every page got 4 shops)
     tree = html.fromstring(indexPage)
@@ -54,10 +54,10 @@ def ParseIndexPage(url):
         return None
 
 def ParseInfoPage(url):
-    '''Crawl Info Page(Ajax), Then Parse What You Intrested.
+    '''Crawl info page(Ajax page), then parse what you intrested.
 
     Args:
-        url: Info Page URL
+        url: Info page URL
 
     Returns:
         None
@@ -65,7 +65,7 @@ def ParseInfoPage(url):
 
     # Send Ajax Request to This Page
     headers = { 'Referer' : 'http://www.cqpayeasy.com/search.php?module=2' }
-    content = GetAjaxPage(url, None, headers)
+    content = RequireAjaxPage(url, None, headers)
     
     # Parse Data
     infopage = html.fromstring(content)
@@ -103,6 +103,10 @@ def ParseInfoPage(url):
         shops = info.xpath(".//table/tr[5]/td/text()")
         for shop in shops:
             print "Shop: " + shop
+
+##################################################
+#                   Application                  #
+##################################################
 
 if __name__ == "__main__":
     ParseIndexPage('http://www.cqpayeasy.com/search.php?module=2&page=1')

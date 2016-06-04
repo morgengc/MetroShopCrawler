@@ -17,7 +17,7 @@ import cookielib
 ##################################################
 
 def AutoCookie():
-    '''Setup a Cookie Handler. It will help us handle cookie automatically.
+    '''Setup a cookie handler. It will help us handle cookie automatically.
 
     Args:
         None
@@ -31,8 +31,8 @@ def AutoCookie():
     opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler) 
     urllib2.install_opener(opener) 
 
-def GetNormalPage(url, body=None, headers=None):
-    '''Get Basic HTML Web Page, Without Ajax.
+def RequireNormalPage(url, body=None, headers=None):
+    '''Require basic HTML web page(without Ajax), and return the page content.
 
     Args:
         url:     Full path URL
@@ -40,7 +40,7 @@ def GetNormalPage(url, body=None, headers=None):
         headers: More headers(if necessary)
 
     Returns:
-        Web Content
+        Page Content
     '''
 
     AutoCookie()
@@ -68,8 +68,8 @@ def GetNormalPage(url, body=None, headers=None):
         
     return None
 
-def GetAjaxPage(url, body=None, headers=None):
-    '''Get Web Page Using Ajax.
+def RequireAjaxPage(url, body=None, headers=None):
+    '''Require Ajax web page, and return the page content.
 
     Args:
         url:     Full path URL
@@ -77,13 +77,13 @@ def GetAjaxPage(url, body=None, headers=None):
         headers: More headers(if necessary)
 
     Returns:
-        Web Content
+        Page Content
     '''
 
     ajaxHeaders = headers
     ajaxHeaders['X-Requested-With'] = 'XMLHttpRequest'
 
-    return GetNormalPage(url, body, ajaxHeaders)
+    return RequireNormalPage(url, body, ajaxHeaders)
 
 ##################################################
 #                   Unit Test                    #
@@ -98,5 +98,5 @@ if __name__ == "__main__":
         'city' : 'Manchester'
     } 
 
-    print GetNormalPage(url, values)
+    print RequireNormalPage(url, values)
 
