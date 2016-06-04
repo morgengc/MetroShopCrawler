@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 #################################################################
-# BRIEF:    Get Page Lib
+# BRIEF:    Require Page Lib
 # AUTHOR:   gaochao.morgen@gmail.com
 # V1.0      2016-04-28  Create
 #################################################################
