@@ -13,7 +13,7 @@ import json
 import urllib2 
 import cookielib 
 from lxml import html
-from GetPageLib import RequireNormalPage, RequireAjaxPage
+from RequirePageLib import RequireNormalPage, RequireAjaxPage
 
 ##################################################
 #                   Functions                    #
