@@ -13,7 +13,7 @@ import json
 import urllib2 
 import cookielib 
 from lxml import html
-from RequirePageLib import RequireNormalPage, RequireAjaxPage
+from RequirePageLib import RequirePageWithHttp, RequirePageWithAjax
 
 ##################################################
 #                   Functions                    #
@@ -30,7 +30,7 @@ def ParseIndexPage(url):
     '''
 
     print "Index Page: %s" %url
-    indexPage = RequireNormalPage(url)
+    indexPage = RequirePageWithHttp(url)
 
     # Find all shops(every page got 4 shops)
     tree = html.fromstring(indexPage)
@@ -64,9 +64,9 @@ def ParseInfoPage(url):
     '''
 
     # Send Ajax request to this page
-    # However, you can still using `RequireNormalPage()` instead
+    # However, you can still using `RequirePageWithHttp()` instead
     headers = { 'Referer' : 'http://www.cqpayeasy.com/search.php?module=2' }
-    content = RequireAjaxPage(url, None, headers)
+    content = RequirePageWithAjax(url, None, headers)
     
     # Parse data
     infopage = html.fromstring(content)

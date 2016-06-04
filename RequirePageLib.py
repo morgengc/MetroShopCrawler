@@ -31,7 +31,7 @@ def AutoCookie():
     opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler) 
     urllib2.install_opener(opener) 
 
-def RequireNormalPage(url, body=None, headers=None):
+def RequirePageWithHttp(url, body=None, headers=None):
     '''Require web page using HTTP, and return the page content.
 
     Args:
@@ -68,7 +68,7 @@ def RequireNormalPage(url, body=None, headers=None):
         
     return None
 
-def RequireAjaxPage(url, body=None, headers=None):
+def RequirePageWithAjax(url, body=None, headers=None):
     '''Require web page using Ajax, and return the page content.
 
     Args:
@@ -82,7 +82,7 @@ def RequireAjaxPage(url, body=None, headers=None):
 
     ajaxHeaders = {'X-Requested-With' : 'XMLHttpRequest'}
     ajaxHeaders = (ajaxHeaders if headers is None else ajaxHeaders.update(headers))
-    return RequireNormalPage(url, body, ajaxHeaders)
+    return RequirePageWithHttp(url, body, ajaxHeaders)
 
 ##################################################
 #                   Unit Test                    #
@@ -97,9 +97,9 @@ if __name__ == "__main__":
         'city' : 'Manchester'
     } 
 
-    print RequireNormalPage(url, values)
+    print RequirePageWithHttp(url, values)
 
     print "------"
 
-    print RequireAjaxPage(url, values)
+    print RequirePageWithAjax(url, values)
 
