@@ -47,10 +47,13 @@ def RequirePageWithHttp(url, body=None, headers=None):
 
     post = (None if body is None else urllib.urlencode(body))
     request = urllib2.Request(url, post)
-    request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:45.0) Gecko/20100101 Firefox/45.0')
-    if headers:
-        for key in headers:
-            request.add_header(key, headers[key])
+
+    httpHeaders = {'User-Agent' : 'Mozilla/5.0 (Windows NT 5.1; rv:45.0) Gecko/20100101 Firefox/45.0'}
+    if headers is not None:
+        httpHeaders.update(headers)
+
+    for key in httpHeaders:
+        request.add_header(key, httpHeaders[key])
 
     try:
         response = urllib2.urlopen(request)
@@ -81,7 +84,8 @@ def RequirePageWithAjax(url, body=None, headers=None):
     '''
 
     ajaxHeaders = {'X-Requested-With' : 'XMLHttpRequest'}
-    ajaxHeaders = (ajaxHeaders if headers is None else ajaxHeaders.update(headers))
+    if headers is not None:
+        ajaxHeaders.update(headers)
     return RequirePageWithHttp(url, body, ajaxHeaders)
 
 ##################################################
