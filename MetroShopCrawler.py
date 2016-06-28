@@ -13,7 +13,7 @@ import json
 import urllib2 
 import cookielib 
 from lxml import html
-from RequirePageLib import RequirePageWithHttp, RequirePageWithAjax
+from RequirePageLib import *
 
 ##################################################
 #                   Functions                    #
@@ -31,6 +31,7 @@ def ParseIndexPage(url):
 
     print "Index Page: %s" %url
     indexPage = RequirePageWithHttp(url)
+    PrintCookie()
 
     # Find all shops(every page got 4 shops)
     tree = html.fromstring(indexPage)
@@ -110,5 +111,6 @@ def ParseInfoPage(url):
 ##################################################
 
 if __name__ == "__main__":
+    SetAutoCookie()
     ParseIndexPage('http://www.cqpayeasy.com/search.php?module=2&page=1')
 

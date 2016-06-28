@@ -16,7 +16,7 @@ import cookielib
 #                   Interface                    #
 ##################################################
 
-def AutoCookie():
+def SetAutoCookie():
     '''Setup a cookie handler. It will help us handle cookie automatically.
 
     Args:
@@ -26,10 +26,25 @@ def AutoCookie():
         None
     '''
 
-    cj = cookielib.LWPCookieJar() 
-    cookie_support = urllib2.HTTPCookieProcessor(cj) 
+    global GCJ
+    GCJ = cookielib.LWPCookieJar() 
+    cookie_support = urllib2.HTTPCookieProcessor(GCJ) 
     opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler) 
     urllib2.install_opener(opener) 
+
+def PrintCookie():
+    '''Print cookies.
+
+    Args:
+        None
+
+    Returns:
+        None
+    '''
+
+    for index, cookie in enumerate(GCJ):
+        print '[',index, ']',cookie;
+    print '-'*80;
 
 def RequirePageWithHttp(url, body=None, headers=None):
     '''Require web page using HTTP, and return the page content.
@@ -42,8 +57,6 @@ def RequirePageWithHttp(url, body=None, headers=None):
     Returns:
         Page Content
     '''
-
-    AutoCookie()
 
     post = (None if body is None else urllib.urlencode(body))
     request = urllib2.Request(url, post)
